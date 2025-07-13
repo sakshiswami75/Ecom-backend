@@ -3,6 +3,7 @@ const mongoose=require("mongoose");
 const dotenv=require("dotenv");
 const cookieParser=require("cookie-parser");
 const routes = require("./routes");
+const { errorHandler } = require("./middleware/errorHandler");
 dotenv.config();
 const server=express();
 
@@ -13,8 +14,16 @@ mongoose.connect(process.env.MONGO_URI).then(()=>{console.log("Connected to Mong
 
 server.use(express.json());
 server.use(cookieParser());
-server.use("/api",routes);
 
+server.use("/api",routes);
+server.use((req,res,next)=>{
+    const error=new Error(`Undefined route error`);
+    error.statusCode=400;
+    throw next(error)
+
+}) 
+
+server.use(errorHandler)
 server.listen(5000,()=>{
     console.log("Server connected");
 });

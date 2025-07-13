@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 
-const productSchema=new mangoose.Schema({
+const productSchema=new mongoose.Schema({
     name:{type:String,require:true},
     category:{type:String,require:true},
     description:{type:String,require:true},
@@ -15,4 +15,4 @@ const productSchema=new mangoose.Schema({
 
 const productModel=mongoose.model("product",productSchema);
 
-module.exports=productSchema;
+module.exports = productModel;
