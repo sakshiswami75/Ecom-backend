@@ -26,7 +26,7 @@ exports.login = async (req, res, next) => {
             expiresIn: process.env.JWT_EXPIRESIN,
         });
         res.cookie("jwt", jwtToken, {
-            httpOnly: true,
+            httpsOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: Number(process.env.COOKIE_AGE),
         })
@@ -39,4 +39,16 @@ exports.login = async (req, res, next) => {
     } catch (error) {
         next(error)
     }
+}
+
+exports.logout=async (res,req,next) => {
+    try {
+        res.clearCookie("jwt",{
+            httpsOnly:true
+        })
+        res.status(200).json({message:"Logout successful"});
+    } catch (error) {
+        next(error)
+    }
+    
 }
