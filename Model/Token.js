@@ -3,12 +3,12 @@ const mongoose=require("mongoose");
 const tokenSchema=new mangoose.Schema({
     userid:{
         type:mongoose.Schema.Types.ObjectId(ObjectId),
-        require:true,
+        required:true,
         ref:"User"
     },
     tokenid:{
         type:String,
-        require:true
+        required:true
     }
 },{
     timestamps:true

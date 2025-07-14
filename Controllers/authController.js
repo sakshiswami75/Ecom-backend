@@ -41,7 +41,7 @@ exports.login = async (req, res, next) => {
     }
 }
 
-exports.logout=async (res,req,next) => {
+exports.logout=async (req,res,next) => {
     try {
         res.clearCookie("jwt",{
             httpsOnly:true
