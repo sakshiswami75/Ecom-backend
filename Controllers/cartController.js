@@ -1,5 +1,6 @@
 const { json } = require("express");
 const CartModel = require("../Model/Cart")
+ 
 
 exports.addToCart=async (req,res,next) => {
     const{productId,quantity,userId}=req.body;
@@ -40,33 +41,41 @@ exports.removeCartProduct=async (req,res,next) => {
     }
     
 }
-exports.viewCart=async (req,res,next) => {
-    const{userId}=req.body;
-    try {
-        const cart=await CartModel.findOne({userId}).populate("items.productId","name price description quantity imageUrl")
-        if (!cart) {
-            return res.status(200),json({message:"Cart is empty",items:[]})
-        }
-        res.status(200),json({ cart })
-    } catch (error) {
-        next(error)
-    }
+exports.viewCart = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const cart = await CartModel.findOne({ userId }).populate(
+      "items.productId",
+      "name price imageUrl"
+    );
+    if (!cart) return res.status(200).json({ items: [] }); // return empty if no cart
+
+    res.status(200).json(cart);
+  } catch (err) {
+    next(err);
+  }
 };
-exports.updateCartItem=async (req,res,next) => {
-    const {userId,productId,quantity}=req.body
-    try {
-        const cart=await CartModel.findOne({userId});
-        if(!cart){
-            const error=new Error("Cart is empty");
-            error.statusCode=400;
-            throw error
-        }
-        const neededItem=cart.items.find((item)=>item.productId.toString()===productId)
-        neededItem.quantity=quantity;
-        await cart.save();
-        res.status(200).json({message:"Updated"})
-    } catch (error) {
-        next(error)
-    }
-    
-}
+
+exports.updateCartItemQty = async (req, res, next) => {
+  try {
+    const { productId, quantity } = req.body;
+    const userId = req.user.id;
+
+    const cart = await CartModel.findOne({ userId });
+    if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+    const item = cart.items.find(
+      (item) => item.productId.toString() === productId
+    );
+    if (!item) return res.status(404).json({ message: "Product not in cart" });
+
+    item.quantity = quantity;
+    cart.updatedAt = Date.now();
+    await cart.save();
+
+    res.status(200).json({ message: "Quantity updated", cart });
+  } catch (err) {
+    next(err);
+  }
+};
