@@ -4,5 +4,5 @@ const { getAllUsers, userRegister } = require("../Controllers/userController");
 const routes=express.Router();
 
 routes.get("/",getAllUsers);
-routes.post("/",userRegister)
+routes.post("/register",userRegister)
 module.exports=routes;

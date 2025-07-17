@@ -3,10 +3,18 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const routes = require("./routes");
+const cors = require("cors")
 const { errorHandler } = require("./middleware/errorHandler");
 
 dotenv.config();
 const server = express();
+server.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  })
+);
 
 mongoose.connect(process.env.MONGO_URI).then(() => console.log("Connected to MongoDB"))
 .catch((e) => console.log(e));

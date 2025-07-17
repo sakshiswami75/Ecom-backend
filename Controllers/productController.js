@@ -1,6 +1,7 @@
 const productModel = require("../Model/Products");
-const { json } = require("express");
-const { findByIdAndDelete } = require("../Model/User");
+const Rating=require("../Model/Rating")
+// const { json } = require("express");
+// const { findByIdAndDelete } = require("../Model/User");
 
 exports.createProduct=async (req,res,next) => {
     const {name,category,description,price,quantity,imageurl}=req.body
@@ -21,7 +22,7 @@ exports.getAllProducts=async (req,res,next) => {
 
     try {
         const products=await productModel.find();
-        res.status(200).json({products})
+        res.status(200).json(products)
     } catch (error) {
         next(error)
     }
@@ -36,7 +37,20 @@ exports.getProductById=async (req,res,next) => {
             error.statusCode=(400);
             throw error
         }     
-        res.status(200).json(product)
+        const ratings = await Rating.find({id})
+    let averageRating = 0;
+    if (ratings.length > 0) {
+      const sum = ratings.reduce((total, rating) => total + rating.rating, 0);
+      averageRating = sum / ratings.length;
+    }
+    const response = {
+      ...product.toObject(),
+      averageRating: parseFloat(averageRating.toFixed(1)),
+      totalRatings: ratings.length,
+      outOf5: 5,
+    };
+
+    res.json(response);
     } catch (error) {
         next(error)
     }
