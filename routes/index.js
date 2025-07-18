@@ -12,7 +12,7 @@ const routes=express.Router();
 routes.use("/users", userRoute);
 routes.use("/products",productRoute)
 routes.use("/auth",authRoute)
-routes.use("/cart",auth,cartRoute)
+routes.use("/carts",auth,cartRoute)
 routes.use("/orders", auth, orderRoute);
 routes.use("/ratings",auth,ratingRoute)
 module.exports=routes;

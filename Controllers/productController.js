@@ -4,9 +4,13 @@ const Rating=require("../Model/Rating")
 // const { findByIdAndDelete } = require("../Model/User");
 
 exports.createProduct=async (req,res,next) => {
-    const {name,category,description,price,quantity,imageurl}=req.body
-    try {
-        const products=await productModel.create({name,description,category,price,quantity,imageurl});
+    let {name,category,description,price,quantity,imageUrl}=req.body
+        try {
+            if (req.file) {
+            imageUrl = `/uploads/${req.file.filename}`;
+        }
+        console.log(imageUrl)
+        const products=await productModel.create({name,description,category,price,quantity,imageUrl});
         res.status(201).json({
             Message:"Product created successfully",
             products
@@ -61,6 +65,9 @@ exports.updateProductById=async (req,res,next) => {
     const {id}=req.params;
     const {name,category,description,price,quantity,imageurl}=req.body
     try {
+           if (req.file) {
+            imageUrl = `/uploads/${req.file.filename}`;
+        }
         const product=await productModel.findById(id);
         if(!product){
             const error=new Error("Product does not exist")

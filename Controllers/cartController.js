@@ -3,7 +3,9 @@ const CartModel = require("../Model/Cart")
  
 
 exports.addToCart=async (req,res,next) => {
-    const{productId,quantity,userId}=req.body;
+    const{productId,quantity}=req.body;
+    const userId=req.user.id
+    console.log(userId)
     try {
          let cart=await CartModel.findOne({userId});
         if(!cart){

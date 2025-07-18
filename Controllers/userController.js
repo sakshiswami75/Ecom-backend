@@ -13,7 +13,7 @@ exports.getAllUsers=async (req,res,next) => {
 }
 
 exports.userRegister=async (req,res,next) => {
-    const{name,email,password,role}=req.body;
+    const{name,email,password,role="customer"}=req.body;
     try {
         const exitUser=await UserModel.findOne({email});
         if(exitUser){
@@ -28,4 +28,3 @@ exports.userRegister=async (req,res,next) => {
         next(error)
     }
 }
-

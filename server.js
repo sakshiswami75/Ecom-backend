@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const routes = require("./routes");
 const cors = require("cors")
+const path= require("path")
 const { errorHandler } = require("./middleware/errorHandler");
 
 dotenv.config();
@@ -24,7 +25,7 @@ server.use(cookieParser());
 
 
 server.use("/api", routes);
-
+server.use("/uploads", express.static(path.join(__dirname, "uploads")));
 server.use((req, res, next) => {
   const error = new Error("Undefined route error");
   error.statusCode = 400;
