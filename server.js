@@ -23,13 +23,17 @@ mongoose.connect(process.env.MONGO_URI).then(() => console.log("Connected to Mon
 server.use(express.json());
 server.use(cookieParser());
 
+server.get('/', (req, res) => {
+  res.send('Welcome to the E-Commerce Backend API');
+});
 
 server.use("/api", routes);
 server.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 server.use((req, res, next) => {
   const error = new Error("Undefined route error");
-  error.statusCode = 400;
-  next(error); 
+  error.statusCode = 404; 
+  next(error);
 });
 
 
